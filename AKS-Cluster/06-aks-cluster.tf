@@ -21,7 +21,7 @@
 */
 
 resource "azurerm_kubernetes_cluster" "aks_cluster" {
-  name                = "${azurerm_resource_group.aks_rg.name}-cluster-${data.azuread_user.current.surname}"
+  name                = "${azurerm_resource_group.aks_rg.name}-cluster"
   location            = azurerm_resource_group.aks_rg.location
   resource_group_name = azurerm_resource_group.aks_rg.name
   dns_prefix          = "${azurerm_resource_group.aks_rg.name}-cluster"
