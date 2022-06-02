@@ -1,7 +1,15 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: hipstershop
+  labels:
+    name: hipstershop
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: adservice
+  namespace: hipstershop
 spec:
   selector:
     matchLabels:
@@ -16,7 +24,7 @@ spec:
         - name: PORT
           value: "9555"
         - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-          value: http://appd-otel-collector.opentelemetry-controller.svc.cluster.local:4317
+          value: http://service-name.namespace.svc.cluster.local:4317
         - name: OTEL_RESOURCE_ATTRIBUTES
           value: service.name=adservice,service.version=1.0.0
         image: docker.io/jholmes/adservice:1.0.0
@@ -52,6 +60,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: adservice
+  namespace: hipstershop
 spec:
   ports:
   - name: grpc
@@ -65,6 +74,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cartservice
+  namespace: hipstershop
 spec:
   selector:
     matchLabels:
@@ -79,7 +89,7 @@ spec:
         - name: REDIS_ADDR
           value: redis-cart:6379
         - name: OTEL_EXPORTER_OTLP_ENDPOINT
-          value: http://appd-otel-collector.opentelemetry-controller.svc.cluster.local:4317
+          value: http://service-name.namespace.svc.cluster.local:4317
         - name: OTEL_RESOURCE_ATTRIBUTES
           value: service.name=cartservice,service.version=1.0.0,telemetry.sdk.language=dotnet
         image: docker.io/jholmes/cartservice:1.0.0
@@ -116,6 +126,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: cartservice
+  namespace: hipstershop
 spec:
   ports:
   - name: grpc
@@ -129,6 +140,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: checkoutservice
+  namespace: hipstershop
 spec:
   selector:
     matchLabels:
@@ -155,7 +167,7 @@ spec:
         - name: CART_SERVICE_ADDR
           value: cartservice:7070
         - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-          value: http://appd-otel-collector.opentelemetry-controller.svc.cluster.local:4317
+          value: http://service-name.namespace.svc.cluster.local:4317
         - name: OTEL_RESOURCE_ATTRIBUTES
           value: service.name=checkoutservice,service.version=1.0.0
         image: docker.io/jholmes/checkoutservice:1.0.0
@@ -186,6 +198,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: checkoutservice
+  namespace: hipstershop
 spec:
   ports:
   - name: grpc
@@ -199,6 +212,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: currencyservice
+  namespace: hipstershop
 spec:
   selector:
     matchLabels:
@@ -213,7 +227,7 @@ spec:
         - name: PORT
           value: "7000"
         - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-          value: http://appd-otel-collector.opentelemetry-controller.svc.cluster.local:4317
+          value: http://service-name.namespace.svc.cluster.local:4317
         - name: OTEL_RESOURCE_ATTRIBUTES
           value: service.name=currencyservice,service.version=1.0.0
         image: docker.io/jholmes/currencyservice:1.0.0
@@ -246,6 +260,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: currencyservice
+  namespace: hipstershop
 spec:
   ports:
   - name: grpc
@@ -259,6 +274,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: emailservice
+  namespace: hipstershop
 spec:
   selector:
     matchLabels:
@@ -273,7 +289,7 @@ spec:
         - name: PORT
           value: "8080"
         - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-          value: http://appd-otel-collector.opentelemetry-controller.svc.cluster.local:4317
+          value: http://service-name.namespace.svc.cluster.local:4317
         - name: OTEL_RESOURCE_ATTRIBUTES
           value: service.name=emailservice,service.version=1.0.0
         image: docker.io/jholmes/emailservice:1.0.0
@@ -307,6 +323,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: emailservice
+  namespace: hipstershop
 spec:
   ports:
   - name: grpc
@@ -320,6 +337,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
+  namespace: hipstershop
 spec:
   selector:
     matchLabels:
@@ -350,7 +368,7 @@ spec:
         - name: AD_SERVICE_ADDR
           value: adservice:9555
         - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-          value: http://appd-otel-collector.opentelemetry-controller.svc.cluster.local:4317
+          value: http://service-name.namespace.svc.cluster.local:4317
         - name: OTEL_RESOURCE_ATTRIBUTES
           value: service.name=frontend,service.version=1.0.0
         - name: ENV_PLATFORM
@@ -389,6 +407,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend
+  namespace: hipstershop
 spec:
   ports:
   - name: http
@@ -402,6 +421,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend-external
+  namespace: hipstershop
 spec:
   ports:
   - name: http
@@ -415,6 +435,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: paymentservice
+  namespace: hipstershop
 spec:
   selector:
     matchLabels:
@@ -429,7 +450,7 @@ spec:
         - name: PORT
           value: "50051"
         - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-          value: http://appd-otel-collector.opentelemetry-controller.svc.cluster.local:4317
+          value: http://service-name.namespace.svc.cluster.local:4317
         - name: OTEL_RESOURCE_ATTRIBUTES
           value: service.name=paymentservice,service.version=1.0.0
         image: docker.io/jholmes/paymentservice:1.0.0
@@ -461,6 +482,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: paymentservice
+  namespace: hipstershop
 spec:
   ports:
   - name: grpc
@@ -474,6 +496,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: productcatalogservice
+  namespace: hipstershop
 spec:
   selector:
     matchLabels:
@@ -488,7 +511,7 @@ spec:
         - name: PORT
           value: "3550"
         - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-          value: http://appd-otel-collector.opentelemetry-controller.svc.cluster.local:4317
+          value: http://service-name.namespace.svc.cluster.local:4317
         - name: OTEL_RESOURCE_ATTRIBUTES
           value: service.name=productcatalogservice,service.version=1.0.0
         image: docker.io/jholmes/productcatalogservice:1.0.0
@@ -520,6 +543,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: productcatalogservice
+  namespace: hipstershop
 spec:
   ports:
   - name: grpc
@@ -533,6 +557,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: recommendationservice
+  namespace: hipstershop
 spec:
   selector:
     matchLabels:
@@ -549,7 +574,7 @@ spec:
         - name: PRODUCT_CATALOG_SERVICE_ADDR
           value: productcatalogservice:3550
         - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-          value: http://appd-otel-collector.opentelemetry-controller.svc.cluster.local:4317
+          value: http://service-name.namespace.svc.cluster.local:4317
         - name: OTEL_RESOURCE_ATTRIBUTES
           value: service.name=recommendationservice,service.version=1.0.0
         image: docker.io/jholmes/recommendationservice:1.0.0
@@ -583,6 +608,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: recommendationservice
+  namespace: hipstershop
 spec:
   ports:
   - name: grpc
@@ -596,6 +622,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis-cart
+  namespace: hipstershop
 spec:
   selector:
     matchLabels:
@@ -636,6 +663,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis-cart
+  namespace: hipstershop
 spec:
   ports:
   - name: redis
@@ -649,6 +677,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: shippingservice
+  namespace: hipstershop
 spec:
   selector:
     matchLabels:
@@ -663,7 +692,7 @@ spec:
         - name: PORT
           value: "50051"
         - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-          value: http://appd-otel-collector.opentelemetry-controller.svc.cluster.local:4317
+          value: http://service-name.namespace.svc.cluster.local:4317
         - name: OTEL_RESOURCE_ATTRIBUTES
           value: service.name=shippingservice,service.version=1.0.0
         image: docker.io/jholmes/shippingservice:1.0.0
@@ -695,6 +724,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: shippingservice
+  namespace: hipstershop
 spec:
   ports:
   - name: grpc
@@ -709,6 +739,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: loadgenerator
+  namespace: hipstershop
 spec:
   replicas: 1
   selector:
