@@ -1,5 +1,5 @@
 variable "cluster-name" {
-  default = "terraform-eks-dev"
+  default = "terraform-dev-charleslin"
   type    = string
 }
 

@@ -5,7 +5,7 @@ locals {
 }
 
 resource "aws_eks_cluster" "aws_eks" {
-  name     = "${var.cluster-name}-${local.caller_name}"
+  name     = "${var.cluster-name}"
   role_arn = aws_iam_role.eks_cluster.arn
 
   vpc_config {
