@@ -17,9 +17,7 @@ resource "aws_eks_cluster" "aws_eks" {
     aws_iam_role_policy_attachment.AmazonEKSServicePolicy,
   ]
 
-  tags = {
-    Name = var.cluster-name
-  }
+  tags = merge ( { Name = var.cluster-name }, var.cost-center-tags )
 }
 
 resource "aws_eks_node_group" "node" {
@@ -49,6 +47,8 @@ resource "aws_eks_node_group" "node" {
     aws_iam_role_policy_attachment.AmazonEKS_CNI_Policy,
     aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryReadOnly,
   ]
+
+  tags = merge ( { Name = "${var.cluster-name}-ng"}, var.cost-center-tags )
 }
 
 # Set up local kubectl credential and context

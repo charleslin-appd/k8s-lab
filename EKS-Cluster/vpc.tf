@@ -12,7 +12,5 @@ module "vpc" {
   enable_nat_gateway = false
   enable_vpn_gateway = false
 
-  tags = {
-    Name = "${var.cluster-name}-vpc"
-  }
+  tags = merge ( { Name = "${var.cluster-name}-vpc"}, var.cost-center-tags )
 }
