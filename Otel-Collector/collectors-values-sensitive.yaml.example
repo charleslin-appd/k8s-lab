@@ -1,0 +1,6 @@
+ appdynamics-otel-collector:
+  clientId: xxxxxxxxxxxxxxxxxxxxxxxxx
+  clientSecret: xxxxxxxxxxxxxxxxxxxxxxxxxxx
+  endpoint: https://tenantid.observe.appdynamics.com/data
+  tokenUrl: https://tenantid.observe.appdynamics.com/auth/xxxxxx-xxxx-xxxxx-xxxx-xxxxxxxxx/default/oauth2/token
+
