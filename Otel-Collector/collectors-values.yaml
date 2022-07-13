@@ -13,47 +13,20 @@ appdynamics-cloud-k8s-monitoring:
     container:
       conditions:
         - condition:
-            operator: equals
+            operator: contains
             key: kubernetes.pod.name
             value: adservice
-          multiLinePattern:
-          multiLineNegate:
-          multiLineMatch:
           messageParser:
             log4J:
               enabled: true
               pattern: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg trace_id=%X{trace_id} span_id=%X{span_id} trace_flags=%X{trace_flags} %n"
-            logback:
-              enabled:
-              pattern:
-            timestamp:
-              enabled:
-              format:
-            json:
-              enabled:
-              timestampField:
-              timestampPattern:
-              flattenSep:
-              fieldsToIgnore:
-              fieldsToIgnoreRegex:
-              maxNumOfFields:
-              maxDepth:
-            grok:
-              enabled:
-              patterns:
-              timestampField:
-              timestampPattern:
-            infra:
-              enabled:
+          multiLinePattern: '^2022' # default is after
+          multiLineNegate: true # default is false
       clusterName: terraform-dev-charleslin
-      dropFields: []
-      batchSize:
-      loggingLevel:
-      loggingSelectors: []
-      monitoring:
-        enabled:
-        loggingPeriod:
-    filebeatYaml: ""
+      dropFields: ["agent", "stream", "ecs", "input", "orchestrator", "k8s.annotations.appdynamics", "k8s.labels", "k8s.node.labels", "cloud"]
+      batchSize: 1000
+      loggingLevel: info
+      loggingSelectors: [ "otlp" ]
     
 appdynamics-otel-collector:
   # see collectors-values-sensitive.yaml for the following setting
