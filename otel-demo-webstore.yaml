@@ -992,7 +992,8 @@ spec:
             value: http://appdynamics-otel-collector-service.appdynamics.svc.cluster.local:4317
           - name: PAYMENT_SERVICE_PORT
             value: "8080"
-          
+          command: ["/bin/sh"]
+          args: ['-c', 'export OTEL_RESOURCE_ATTRIBUTES="$OTEL_RESOURCE_ATTRIBUTES","container.id="$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && node --require ./tracing.js ./index.js']
           # map[cart-service:[redis] checkout-service:[cart-service currency-service email-service payment-service product-catalog-service shipping-service] frontend:[ad-service cart-service checkout-service currency-service product-catalog-service recommendation-service shipping-service] loadgenerator:[frontend] recommendation-service:[product-catalog-service]]
           # payment-service
 ---
