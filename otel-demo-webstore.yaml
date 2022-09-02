@@ -424,7 +424,7 @@ spec:
           - name: REDIS_ADDR
             value: opentelemetry-demo-redis:6379
           command: ["/bin/sh"]
-          args: ['-c', 'export OTEL_RESOURCE_ATTRIBUTES="$OTEL_RESOURCE_ATTRIBUTES","container.id="$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && ./cartservice'] 
+          args: ['-c', 'OTEL_RESOURCE_ATTRIBUTES=$OTEL_RESOURCE_ATTRIBUTES,container.id=$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && ./cartservice'] 
 ---
 # Source: opentelemetry-demo/templates/component.yaml
 apiVersion: apps/v1
@@ -504,7 +504,7 @@ spec:
           - name: SHIPPING_SERVICE_ADDR
             value: opentelemetry-demo-shipping-service:8080
           command: ["/bin/sh"]
-          args: ['-c', 'export OTEL_RESOURCE_ATTRIBUTES="$OTEL_RESOURCE_ATTRIBUTES","container.id="$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && ./checkoutservice'] 
+          args: ['-c', 'OTEL_RESOURCE_ATTRIBUTES=$OTEL_RESOURCE_ATTRIBUTES,container.id=$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && ./checkoutservice'] 
 ---
 # Source: opentelemetry-demo/templates/component.yaml
 apiVersion: apps/v1
@@ -574,7 +574,7 @@ spec:
           # map[cart-service:[redis] checkout-service:[cart-service currency-service email-service payment-service product-catalog-service shipping-service] frontend:[ad-service cart-service checkout-service currency-service product-catalog-service recommendation-service shipping-service] loadgenerator:[frontend] recommendation-service:[product-catalog-service]]
           # currency-service
           command: ["/bin/sh"]
-          args: ['-c', 'export OTEL_RESOURCE_ATTRIBUTES="$OTEL_RESOURCE_ATTRIBUTES","container.id="$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && node --require ./tracing.js ./server.js'] 
+          args: ['-c', 'OTEL_RESOURCE_ATTRIBUTES=$OTEL_RESOURCE_ATTRIBUTES,container.id=$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && node --require ./tracing.js ./server.js'] 
 ---
 # Source: opentelemetry-demo/templates/component.yaml
 apiVersion: apps/v1
@@ -646,7 +646,7 @@ spec:
           # map[cart-service:[redis] checkout-service:[cart-service currency-service email-service payment-service product-catalog-service shipping-service] frontend:[ad-service cart-service checkout-service currency-service product-catalog-service recommendation-service shipping-service] loadgenerator:[frontend] recommendation-service:[product-catalog-service]]
           # email-service
           command: ["/bin/sh"]
-          args: ['-c', 'export OTEL_RESOURCE_ATTRIBUTES="$OTEL_RESOURCE_ATTRIBUTES","container.id="$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && bundle exec ruby email_server.rb'] 
+          args: ['-c', 'OTEL_RESOURCE_ATTRIBUTES=$OTEL_RESOURCE_ATTRIBUTES,container.id=$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && bundle exec ruby email_server.rb'] 
 ---
 # Source: opentelemetry-demo/templates/component.yaml
 apiVersion: apps/v1
@@ -720,7 +720,7 @@ spec:
           # map[cart-service:[redis] checkout-service:[cart-service currency-service email-service payment-service product-catalog-service shipping-service] frontend:[ad-service cart-service checkout-service currency-service product-catalog-service recommendation-service shipping-service] loadgenerator:[frontend] recommendation-service:[product-catalog-service]]
           # featureflag-service
           command: ["/bin/sh"]
-          args: ['-c', 'export OTEL_RESOURCE_ATTRIBUTES="$OTEL_RESOURCE_ATTRIBUTES","container.id="$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && /app/bin/server'] 
+          args: ['-c', 'OTEL_RESOURCE_ATTRIBUTES=$OTEL_RESOURCE_ATTRIBUTES,container.id=$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && /app/bin/server'] 
 ---
 # Source: opentelemetry-demo/templates/component.yaml
 apiVersion: apps/v1
@@ -791,6 +791,8 @@ spec:
           
           # map[cart-service:[redis] checkout-service:[cart-service currency-service email-service payment-service product-catalog-service shipping-service] frontend:[ad-service cart-service checkout-service currency-service product-catalog-service recommendation-service shipping-service] loadgenerator:[frontend] recommendation-service:[product-catalog-service]]
           # ffs-postgres
+          command: ["/bin/sh"]
+          args: ['-c', 'OTEL_RESOURCE_ATTRIBUTES=$OTEL_RESOURCE_ATTRIBUTES,container.id=$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && docker-entrypoint.sh postgres'] 
 ---
 # Source: opentelemetry-demo/templates/component.yaml
 apiVersion: apps/v1
@@ -873,6 +875,8 @@ spec:
             value: opentelemetry-demo-recommendation-service:8080
           - name: SHIPPING_SERVICE_ADDR
             value: opentelemetry-demo-shipping-service:8080
+          command: ["/bin/sh"]
+          args: ['-c', 'OTEL_RESOURCE_ATTRIBUTES=$OTEL_RESOURCE_ATTRIBUTES,container.id=$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && ./frontend'] 
 ---
 # Source: opentelemetry-demo/templates/component.yaml
 apiVersion: apps/v1
@@ -939,6 +943,8 @@ spec:
           # loadgenerator
           - name: FRONTEND_ADDR
             value: opentelemetry-demo-frontend:8080
+          command: ["/bin/sh"]
+          args: ['-c', 'OTEL_RESOURCE_ATTRIBUTES=$OTEL_RESOURCE_ATTRIBUTES,container.id=$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && locust --host=http://$FRONTEND_ADDR --headless -u $USERS'] 
 ---
 # Source: opentelemetry-demo/templates/component.yaml
 apiVersion: apps/v1
@@ -1003,7 +1009,7 @@ spec:
           - name: PAYMENT_SERVICE_PORT
             value: "8080"
           command: ["/bin/sh"]
-          args: ['-c', 'export OTEL_RESOURCE_ATTRIBUTES="$OTEL_RESOURCE_ATTRIBUTES","container.id="$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && node --require ./tracing.js ./index.js']
+          args: ['-c', 'OTEL_RESOURCE_ATTRIBUTES=$OTEL_RESOURCE_ATTRIBUTES,container.id=$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && node --require ./tracing.js ./index.js']
           # map[cart-service:[redis] checkout-service:[cart-service currency-service email-service payment-service product-catalog-service shipping-service] frontend:[ad-service cart-service checkout-service currency-service product-catalog-service recommendation-service shipping-service] loadgenerator:[frontend] recommendation-service:[product-catalog-service]]
           # payment-service
 ---
@@ -1073,7 +1079,7 @@ spec:
           # map[cart-service:[redis] checkout-service:[cart-service currency-service email-service payment-service product-catalog-service shipping-service] frontend:[ad-service cart-service checkout-service currency-service product-catalog-service recommendation-service shipping-service] loadgenerator:[frontend] recommendation-service:[product-catalog-service]]
           # product-catalog-service
           command: ["/bin/sh"]
-          args: ['-c', 'export OTEL_RESOURCE_ATTRIBUTES="$OTEL_RESOURCE_ATTRIBUTES","container.id="$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && ./productcatalogservice']
+          args: ['-c', 'OTEL_RESOURCE_ATTRIBUTES=$OTEL_RESOURCE_ATTRIBUTES,container.id=$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && ./productcatalogservice']
 
 ---
 # Source: opentelemetry-demo/templates/component.yaml
@@ -1146,7 +1152,7 @@ spec:
           - name: PRODUCT_CATALOG_SERVICE_ADDR
             value: opentelemetry-demo-product-catalog-service:8080
           command: ["/bin/sh"]
-          args: ['-c', 'export OTEL_RESOURCE_ATTRIBUTES="$OTEL_RESOURCE_ATTRIBUTES","container.id="$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && opentelemetry-instrument python recommendation_server.py']
+          args: ['-c', 'OTEL_RESOURCE_ATTRIBUTES=$OTEL_RESOURCE_ATTRIBUTES,container.id=$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && opentelemetry-instrument python recommendation_server.py']
 
 ---
 # Source: opentelemetry-demo/templates/component.yaml
@@ -1212,6 +1218,8 @@ spec:
           
           # map[cart-service:[redis] checkout-service:[cart-service currency-service email-service payment-service product-catalog-service shipping-service] frontend:[ad-service cart-service checkout-service currency-service product-catalog-service recommendation-service shipping-service] loadgenerator:[frontend] recommendation-service:[product-catalog-service]]
           # redis
+          command: ["/bin/sh"]
+          args: ['-c', 'OTEL_RESOURCE_ATTRIBUTES=$OTEL_RESOURCE_ATTRIBUTES,container.id=$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && docker-entrypoint.sh redis-server'] 
 ---
 # Source: opentelemetry-demo/templates/component.yaml
 apiVersion: apps/v1
@@ -1281,4 +1289,4 @@ spec:
           # map[cart-service:[redis] checkout-service:[cart-service currency-service email-service payment-service product-catalog-service shipping-service] frontend:[ad-service cart-service checkout-service currency-service product-catalog-service recommendation-service shipping-service] loadgenerator:[frontend] recommendation-service:[product-catalog-service]]
           # shipping-service
           command: ["/bin/sh"]
-          args: ['-c', 'export OTEL_RESOURCE_ATTRIBUTES="$OTEL_RESOURCE_ATTRIBUTES","container.id="$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && /src/shippingservice']
+          args: ['-c', 'OTEL_RESOURCE_ATTRIBUTES=$OTEL_RESOURCE_ATTRIBUTES,container.id=$(sed -rn "s/^1:.+:\/.+\/(.+)$/\1/p" /proc/self/cgroup) && /src/shippingservice']
